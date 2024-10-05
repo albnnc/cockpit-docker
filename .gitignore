@@ -1,0 +1,8 @@
+.cache
+.data
+.DS_Store
+.git
+.idea
+.target
+.tmp
+.vscode

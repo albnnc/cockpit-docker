@@ -1,0 +1,33 @@
+{
+  "name": "@albnnc/cockpit",
+  "version": "0.0.0",
+  "lock": false,
+  "imports": {
+    "@albnnc/esbuild-deno-loader": "jsr:@albnnc/esbuild-deno-loader@^0.1.0",
+    "@albnnc/nvil": "jsr:@albnnc/nvil@^0.7.7",
+    "@albnnc/storybook": "jsr:@albnnc/storybook@^0.1.2",
+    "@cliffy/command": "jsr:@cliffy/command@^1.0.0-rc.5",
+    "@david/dax": "jsr:@david/dax@0.41.0",
+    "@emotion/react": "npm:@emotion/react@^11.11.1",
+    "@std/async": "jsr:@std/async@^1.0.3",
+    "@std/jsonc": "jsr:@std/jsonc@^1.0.0",
+    "@std/log": "jsr:@std/log@^0.224.5",
+    "@std/path": "jsr:@std/path@^0.225.2",
+    "@std/yaml": "jsr:@std/yaml@^1.0.5",
+    "core-js": "npm:core-js@^3.38.1",
+    "react-dom": "npm:react-dom@^18.3.1",
+    "react-router-dom": "npm:react-router-dom@^6.6.1",
+    "react": "npm:react@^18.3.1"
+  },
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react",
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable",
+      "deno.ns"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "version": 0,
+  "dashboard": {
+    "index": {
+      "label": "Sokol",
+      "path": "index.html"
+    }
+  }
+}
