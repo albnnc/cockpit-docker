@@ -1,6 +1,6 @@
 import { Page, PageSection, Spinner } from "@patternfly/react-core";
-import { ContainerCollectionCard } from "../components/container_collection_card.tsx";
-import { ProjectCollectionCard } from "../components/project_collection_card.tsx";
+import { ContainerListCard } from "../components/container_list_card.tsx";
+import { ProjectListCard } from "../components/project_list_card.tsx";
 import { useContainerCollection } from "../hooks/use_container_collection.tsx";
 import { useProjectCollection } from "../hooks/use_project_collection.tsx";
 
@@ -17,6 +17,7 @@ export const HomePage = () => {
     );
   }
   if (!containerCollection.data || !projectCollection.data) {
+    // TODO
     return null;
   }
   return (
@@ -24,8 +25,8 @@ export const HomePage = () => {
       <PageSection
         css={{ display: "flex", flexDirection: "column", gap: "1em" }}
       >
-        <ProjectCollectionCard projects={projectCollection.data} />
-        <ContainerCollectionCard containers={containerCollection.data} />
+        <ProjectListCard projects={projectCollection.data} />
+        <ContainerListCard containers={containerCollection.data} />
       </PageSection>
     </Page>
   );

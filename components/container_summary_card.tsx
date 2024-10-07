@@ -7,9 +7,9 @@ export interface ContainerSummaryCardOptions {
   container: Container;
 }
 
-export const ContainerSummaryCard = (
-  { container }: ContainerSummaryCardOptions,
-) => {
+export const ContainerSummaryCard = ({
+  container,
+}: ContainerSummaryCardOptions) => {
   const data = [
     ["ID", container.id],
     ["Name", container.name],

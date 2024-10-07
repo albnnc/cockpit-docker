@@ -2,12 +2,12 @@ import { Card, CardBody, CardTitle, Text, Title } from "@patternfly/react-core";
 import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
 import { ContainerStat } from "../types/container_stat.ts";
 
-export interface ContainerStatResourceCardOptions {
+export interface ContainerStatCardOptions {
   containerStat: ContainerStat;
 }
 
-export const ContainerStatResourceCard = (
-  { containerStat: { cpu, ram, net } }: ContainerStatResourceCardOptions,
+export const ContainerStatCard = (
+  { containerStat: { cpu, ram, net } }: ContainerStatCardOptions,
 ) => {
   const rows = [
     ["CPU", cpu],

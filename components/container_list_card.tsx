@@ -8,41 +8,46 @@ import {
 } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { NavLink } from "react-router-dom";
-import { Project } from "../types/project.ts";
+import { Container } from "../types/container.ts";
+import { ContainerState } from "./container_state.tsx";
 
-export interface ProjectCollectionCardProps {
-  projects: Project[];
+export interface ContainerListCardProps {
+  containers: Container[];
 }
 
-export const ProjectCollectionCard = ({
-  projects,
-}: ProjectCollectionCardProps) => {
+export const ContainerListCard = ({
+  containers,
+}: ContainerListCardProps) => {
   return (
     <Card>
       <CardTitle>
-        <Title headingLevel="h2">Projects</Title>
+        <Title headingLevel="h2">Containers</Title>
       </CardTitle>
       <CardBody css={{ padding: "0", color: "red" }}>
         <Table borders variant="compact">
           <Thead>
             <Tr>
+              <Th>ID</Th>
               <Th>Name</Th>
-              <Th>Status</Th>
-              <Th>Configs</Th>
+              <Th>Image</Th>
+              <Th>State</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {projects.map((v) => (
+            {containers.map((v) => (
               <Tr key={v.name}>
-                <Td dataLabel="Name">
-                  <NavLink to={`/projects/${v.name}`}>
+                <Td dataLabel="ID">
+                  <NavLink to={`/containers/${v.id}`}>
                     <Text component={TextVariants.a}>
-                      {v.name}
+                      {v.id}
                     </Text>
                   </NavLink>
                 </Td>
-                <Td dataLabel="Status">{v.status}</Td>
-                <Td dataLabel="Configs">{v.configs.join(" ")}</Td>
+                <Td dataLabel="Name">{v.name}</Td>
+                <Td dataLabel="Name">{v.image}</Td>
+                <Td dataLabel="State">
+                  <ContainerState container={v} />
+                </Td>
               </Tr>
             ))}
           </Tbody>

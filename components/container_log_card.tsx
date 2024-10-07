@@ -8,13 +8,13 @@ import {
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { ContainerLog } from "../types/container_log.ts";
 
-export interface ContainerLogResourceCardOptions {
+export interface ContainerLogCardProps {
   containerLog: ContainerLog;
 }
 
-export const ContainerLogResourceCard = ({
+export const ContainerLogCard = ({
   containerLog: { items },
-}: ContainerLogResourceCardOptions) => {
+}: ContainerLogCardProps) => {
   return (
     <Card css={{ width: "100%" }}>
       <CardTitle>
