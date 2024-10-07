@@ -1,22 +1,23 @@
 import {
   Card,
   CardBody,
-  CardHeader,
   CardTitle,
-  Label,
   Text,
   TextVariants,
+  Title,
 } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
+import { Link } from "react-router-dom";
 import { useContainerCollection } from "../hooks/use_container_collection.tsx";
+import { ContainerState } from "./container_state.tsx";
 
-export const ContainerTable = () => {
+export const ContainerCollectionCard = () => {
   const { data } = useContainerCollection();
   return (
-    <Card id="container-table" isClickable>
-      <CardHeader>
-        <CardTitle component="h2">Containers</CardTitle>
-      </CardHeader>
+    <Card>
+      <CardTitle>
+        <Title headingLevel="h2">Containers</Title>
+      </CardTitle>
       <CardBody css={{ padding: "0", color: "red" }}>
         <Table borders variant="compact">
           <Thead>
@@ -31,29 +32,16 @@ export const ContainerTable = () => {
             {data.map((v) => (
               <Tr key={v.name}>
                 <Td dataLabel="ID">
-                  <Text
-                    component={TextVariants.a}
-                    href={`./containers/${v.id}`}
-                  >
-                    {v.id}
-                  </Text>
+                  <Link to={`/containers/${v.id}`}>
+                    <Text component={TextVariants.a}>
+                      {v.id}
+                    </Text>
+                  </Link>
                 </Td>
                 <Td dataLabel="Name">{v.name}</Td>
                 <Td dataLabel="Name">{v.image}</Td>
                 <Td dataLabel="State">
-                  <Label
-                    color={({
-                      "created": "blue",
-                      "restarting": "orange",
-                      "running": "green",
-                      "removing": "grey",
-                      "paused": "grey",
-                      "exited": "orange",
-                      "dead": "red",
-                    } as const)[v.state] || "grey" as const}
-                  >
-                    {v.state.slice(0, 1).toLocaleUpperCase() + v.state.slice(1)}
-                  </Label>
+                  <ContainerState container={v} />
                 </Td>
               </Tr>
             ))}

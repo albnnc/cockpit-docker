@@ -1,6 +1,6 @@
-import { Page, PageSection } from "@patternfly/react-core";
-import { useCallback, useEffect } from "react";
-import { ContainerTable } from "./components/container_table.tsx";
+import { useCallback, useEffect, useMemo } from "react";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router.tsx";
 
 const [htmlContainer] = document.getElementsByTagName("html");
 
@@ -21,11 +21,5 @@ export const App = () => {
       }
     });
   }, []);
-  return (
-    <Page>
-      <PageSection>
-        <ContainerTable />
-      </PageSection>
-    </Page>
-  );
+  return useMemo(() => <RouterProvider router={router} />, []);
 };
