@@ -1,6 +1,9 @@
 {
-  "name": "@albnnc/cockpit",
   "version": "0.0.0",
+  "exclude": [
+    "**/.git",
+    "**/.target"
+  ],
   "lock": false,
   "imports": {
     "@albnnc/esbuild-deno-loader": "jsr:@albnnc/esbuild-deno-loader@^0.1.0",
@@ -9,7 +12,9 @@
     "@cliffy/command": "jsr:@cliffy/command@^1.0.0-rc.5",
     "@david/dax": "jsr:@david/dax@0.41.0",
     "@emotion/react": "npm:@emotion/react@^11.11.1",
+    "@patternfly/react-core": "https://esm.sh/@patternfly/react-core@5.4.1?bundle&external=react,react-dom",
     "@std/async": "jsr:@std/async@^1.0.3",
+    "@std/fs": "jsr:@std/fs@^1.0.1",
     "@std/jsonc": "jsr:@std/jsonc@^1.0.0",
     "@std/log": "jsr:@std/log@^0.224.5",
     "@std/path": "jsr:@std/path@^0.225.2",

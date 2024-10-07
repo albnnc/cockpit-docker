@@ -6,3 +6,4 @@
 .target
 .tmp
 .vscode
+node_modules

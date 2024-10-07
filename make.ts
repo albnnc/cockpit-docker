@@ -1,3 +1,8 @@
+#!/usr/bin/env -S deno run -A
+import {
+  denoLoaderPlugin,
+  denoResolverPlugin,
+} from "@albnnc/esbuild-deno-loader";
 import {
   BuildPlugin,
   CleanPlugin,
@@ -6,43 +11,47 @@ import {
   Project,
 } from "@albnnc/nvil";
 import { Command } from "@cliffy/command";
-import $ from "@david/dax";
-import * as log from "@std/log";
 import * as path from "@std/path";
+import { DeployPlugin } from "./utils/deploy_plugin.ts";
+import { StaticsPlugin } from "./utils/statics_plugin.ts";
 
-const currentDir = path.fromFileUrl(import.meta.resolve("./"));
-
-new Command()
+await new Command()
   .name("make")
   .command("build", "Build Cockpit plugins.")
   .option("--dev", "Start dev server and watch for file changes.")
-  .option("--deploy <sshUrl>", "Deploy artifacts to remote Cockpit instance")
-  .action(async ({ dev, deploy: sshUrl }) => {
+  .option("--deploy <sshUrl>", "Deploy artifacts to remote Cockpit instance.")
+  .option("--debug", "Use debug logging.")
+  .action(async ({
+    dev,
+    deploy: sshUrl,
+    debug,
+  }) => {
     const project = new Project({
       plugins: [
         new CleanPlugin(),
         new BuildPlugin({
           entryPoint: `./index.tsx`,
           overrideEsbuildOptions: (options) => {
+            const configPath = path.fromFileUrl(
+              import.meta.resolve("./deno.json"),
+            );
             options.jsxImportSource = "@emotion/react";
-            // options.plugins = [
-            //   new IgnoreEsbuildPlugin([
-            //     "/units/",
-            //     "eve/app.ts",
-            //     "log/logger.ts",
-            //     "z/cmd",
-            //     "ssh_adapter/constants.ts",
-            //     "docker.ts",
-            //   ]),
-            //   ...(dev ? [] : [EsbuildPluginFactory.noSideEffects()]),
-            //   denoResolverPlugin({
-            //     configPath: compoundDenoConfig.path,
-            //   }),
-            //   denoLoaderPlugin({
-            //     configPath: compoundDenoConfig.path,
-            //     loader: "native",
-            //   }),
-            // ];
+            options.plugins = [
+              // new IgnoreEsbuildPlugin([
+              //   "/units/",
+              //   "eve/app.ts",
+              //   "log/logger.ts",
+              //   "z/cmd",
+              //   "ssh_adapter/constants.ts",
+              //   "docker.ts",
+              // ]),
+              // ...(dev ? [] : [EsbuildPluginFactory.noSideEffects()]),
+              denoResolverPlugin({ configPath }),
+              denoLoaderPlugin({
+                configPath,
+                loader: "native",
+              }),
+            ];
             return options;
           },
         }),
@@ -51,22 +60,19 @@ new Command()
           entryPoint: `./manifest.json`,
           bundleUrl: "./manifest.json",
         }),
+        new StaticsPlugin(),
+        ...(sshUrl ? [new DeployPlugin({ sshUrl })] : []),
       ],
       sourceUrl: import.meta.resolve(`./`),
       targetUrl: import.meta.resolve(`./.target/`),
       dev: !!dev,
+      debug: !!debug,
     });
     await project.bootstrap();
     await project.done();
-    if (sshUrl) {
-      log.info(`Deploying to ${sshUrl}`);
-      log.info(`Cleaning up remote plugins`);
-      await $`ssh ${sshUrl} rm -rf /usr/local/share/cockpit`;
-      log.info(`Copying plugins to remote`);
-      await $`scp -rp ./.target/cockpit/plugins ${sshUrl}:/usr/local/share/cockpit`;
-    }
     Deno.exit(0); // FIXME
-  });
+  })
+  .parse(Deno.args);
 
 // class IgnoreEsbuildPlugin implements EsbuildPlugin {
 //   name = "ignore";

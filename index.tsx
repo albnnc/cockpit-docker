@@ -1,10 +1,10 @@
 import * as objectGroupByPolyfill from "core-js/es/object/group-by.js";
-import { render } from "react-dom";
+import { createRoot } from "react-dom/client";
 import { App } from "./app.tsx";
 
-const root = document.getElementById("root");
-
-render(<App />, root);
+const rootContainer = document.getElementById("root");
+const root = createRoot(rootContainer!);
+root.render(<App />);
 
 // Preventing polyfills exclusion from output.
 export { objectGroupByPolyfill };

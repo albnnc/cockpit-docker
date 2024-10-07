@@ -1,8 +1,8 @@
 {
   "version": 0,
-  "dashboard": {
+  "menu": {
     "index": {
-      "label": "Sokol",
+      "label": "Docker",
       "path": "index.html"
     }
   }
