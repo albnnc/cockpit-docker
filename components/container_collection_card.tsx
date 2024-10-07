@@ -7,7 +7,7 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useContainerCollection } from "../hooks/use_container_collection.tsx";
 import { ContainerState } from "./container_state.tsx";
 
@@ -32,11 +32,11 @@ export const ContainerCollectionCard = () => {
             {data.map((v) => (
               <Tr key={v.name}>
                 <Td dataLabel="ID">
-                  <Link to={`/containers/${v.id}`}>
+                  <NavLink to={`/containers/${v.id}`}>
                     <Text component={TextVariants.a}>
                       {v.id}
                     </Text>
-                  </Link>
+                  </NavLink>
                 </Td>
                 <Td dataLabel="Name">{v.name}</Td>
                 <Td dataLabel="Name">{v.image}</Td>
