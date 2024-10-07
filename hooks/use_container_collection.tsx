@@ -3,6 +3,7 @@ import { Container } from "../types/container.ts";
 import { runCommand } from "../utils/cockpit.ts";
 
 export function useContainerCollection() {
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState<Container[]>([]);
   useEffect(() => {
     runCommand(["docker", "container", "ls", "-a", "--format", "json"])
@@ -24,7 +25,8 @@ export function useContainerCollection() {
       .catch((e) => {
         console.error(e);
         setData([]);
-      });
+      })
+      .finally(() => setLoading(false));
   }, []);
-  return { data };
+  return { data, loading };
 }

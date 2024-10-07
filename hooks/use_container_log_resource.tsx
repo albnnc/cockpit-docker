@@ -2,9 +2,16 @@ import { useEffect, useState } from "react";
 import { ContainerLog } from "../types/container_log.ts";
 import { runCommand } from "../utils/cockpit.ts";
 
-export function useContainerLogResource(id: string) {
+export function useContainerLogResource(id?: string) {
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState<ContainerLog | undefined>();
   useEffect(() => {
+    if (!id) {
+      setData({ items: [] });
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
     runCommand(["docker", "logs", "-t", id])
       .then((output) =>
         output
@@ -23,7 +30,8 @@ export function useContainerLogResource(id: string) {
       .catch((e) => {
         console.error(e);
         setData({ items: [] });
-      });
-  }, []);
-  return { data };
+      })
+      .finally(() => setLoading(false));
+  }, [id]);
+  return { data, loading };
 }

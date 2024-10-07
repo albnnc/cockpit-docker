@@ -2,9 +2,16 @@ import { useEffect, useState } from "react";
 import { ContainerStat } from "../types/container_stat.ts";
 import { runCommand } from "../utils/cockpit.ts";
 
-export function useContainerStatResource(id: string) {
+export function useContainerStatResource(id?: string) {
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState<ContainerStat | undefined>();
   useEffect(() => {
+    if (!id) {
+      setData(undefined);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
     runCommand(["docker", "stats", "--no-stream", "--format", "json", id])
       .then((output) => {
         const raw = JSON.parse(output) as Record<string, string>;
@@ -18,7 +25,8 @@ export function useContainerStatResource(id: string) {
       .catch((e) => {
         console.error(e);
         setData(undefined);
-      });
-  }, []);
-  return { data };
+      })
+      .finally(() => setLoading(false));
+  }, [id]);
+  return { data, loading };
 }

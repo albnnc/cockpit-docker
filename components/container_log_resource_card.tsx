@@ -6,20 +6,15 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import { useContainerLogResource } from "../hooks/use_container_log_resource.tsx";
-import { Container } from "../types/container.ts";
+import { ContainerLog } from "../types/container_log.ts";
 
 export interface ContainerLogResourceCardOptions {
-  container: Container;
+  containerLog: ContainerLog;
 }
 
-export const ContainerLogResourceCard = (
-  { container }: ContainerLogResourceCardOptions,
-) => {
-  const { data } = useContainerLogResource(container.id);
-  if (!data) {
-    return null;
-  }
+export const ContainerLogResourceCard = ({
+  containerLog: { items },
+}: ContainerLogResourceCardOptions) => {
   return (
     <Card css={{ width: "100%" }}>
       <CardTitle>
@@ -34,7 +29,7 @@ export const ContainerLogResourceCard = (
             </Tr>
           </Thead>
           <Tbody>
-            {data.items.toReversed().map(({ date, value }) => (
+            {items.toReversed().map(({ date, value }) => (
               <Tr key={date}>
                 <Td>
                   <Timestamp value={date} />
