@@ -1,9 +1,8 @@
-import { createHashRouter, Navigate } from "react-router-dom";
-import { ContainerCollectionPage } from "./pages/container_collection.tsx";
+import { createHashRouter } from "react-router-dom";
 import { ContainerResourcePage } from "./pages/container_resource.tsx";
+import { HomePage } from "./pages/home.tsx";
 
 export const router = createHashRouter([
-  { path: "/", element: <Navigate to="/containers" /> },
-  { path: "/containers", element: <ContainerCollectionPage /> },
+  { path: "/", element: <HomePage /> },
   { path: "/containers/:id", element: <ContainerResourcePage /> },
 ]);
