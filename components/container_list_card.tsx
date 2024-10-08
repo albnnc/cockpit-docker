@@ -7,17 +7,16 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
+import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { Container } from "../types/container.ts";
+import { useContainerCollection } from "../hooks/use_container_collection.tsx";
 import { ContainerState } from "./container_state.tsx";
 
-export interface ContainerListCardProps {
-  containers: Container[];
-}
-
-export const ContainerListCard = ({
-  containers,
-}: ContainerListCardProps) => {
+export const ContainerListCard = () => {
+  const containerCollection = useContainerCollection();
+  useEffect(() => {
+    containerCollection.load();
+  }, []);
   return (
     <Card>
       <CardTitle>
@@ -34,7 +33,7 @@ export const ContainerListCard = ({
             </Tr>
           </Thead>
           <Tbody>
-            {containers.map((v) => (
+            {containerCollection.data?.map((v) => (
               <Tr key={v.name}>
                 <Td dataLabel="ID">
                   <NavLink to={`/containers/${v.id}`}>
@@ -46,7 +45,7 @@ export const ContainerListCard = ({
                 <Td dataLabel="Name">{v.name}</Td>
                 <Td dataLabel="Name">{v.image}</Td>
                 <Td dataLabel="State">
-                  <ContainerState container={v} />
+                  <ContainerState state={v.state} />
                 </Td>
               </Tr>
             ))}

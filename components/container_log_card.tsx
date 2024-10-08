@@ -12,13 +12,15 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   ContainerLogInterval,
   containerLogIntervals,
   ContainerLogLineCountMax,
   containerLogLineCountMaxes,
+  useContainerLogResource,
 } from "../hooks/use_container_log_resource.tsx";
-import { ContainerLog } from "../types/container_log.ts";
 
 export const containerLogIntervalTitles: Record<
   ContainerLogInterval,
@@ -41,21 +43,17 @@ export const containerLogLineCountMaxTitles: Record<
   10_000: "10000 lines max",
 };
 
-export interface ContainerLogCardProps {
-  containerLog: ContainerLog;
-  containerLogInterval: ContainerLogInterval;
-  containerLogLineCountMax: ContainerLogLineCountMax;
-  onContainerLogIntervalChange: (v: ContainerLogInterval) => void;
-  onContainerLogLineCountMaxChange: (v: ContainerLogLineCountMax) => void;
-}
-
-export const ContainerLogCard = ({
-  containerLog: { items },
-  containerLogInterval,
-  containerLogLineCountMax,
-  onContainerLogIntervalChange,
-  onContainerLogLineCountMaxChange,
-}: ContainerLogCardProps) => {
+export const ContainerLogCard = () => {
+  const { id } = useParams();
+  const [interval, setInterval] = useState<ContainerLogInterval>("10m");
+  const [lineCountMax, setLineCountMax] = useState<ContainerLogLineCountMax>(
+    100,
+  );
+  const containerLogResource = useContainerLogResource();
+  useEffect(() => {
+    containerLogResource.load({ id, interval, lineCountMax });
+  }, [interval, lineCountMax]);
+  const { items = [] } = containerLogResource.data ?? {};
   return (
     <Card css={{ width: "100%" }}>
       <CardHeader
@@ -64,9 +62,9 @@ export const ContainerLogCard = ({
             <>
               <FormSelect
                 id="container-log-interval"
-                value={containerLogInterval}
+                value={interval}
                 onChange={(v) =>
-                  onContainerLogIntervalChange?.(
+                  setInterval(
                     (v.target as HTMLSelectElement)
                       .value as ContainerLogInterval,
                   )}
@@ -82,12 +80,10 @@ export const ContainerLogCard = ({
               </FormSelect>
               <FormSelect
                 id="container-log-line-count-max"
-                value={containerLogLineCountMax}
+                value={lineCountMax}
                 onChange={(v) => {
                   const raw = (v.target as HTMLSelectElement).value as string;
-                  onContainerLogLineCountMaxChange?.(
-                    +raw as ContainerLogLineCountMax,
-                  );
+                  setLineCountMax(+raw as ContainerLogLineCountMax);
                 }}
                 css={{ width: "170px" }}
               >

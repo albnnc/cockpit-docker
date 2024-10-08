@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { create } from "zustand";
 import { ContainerLog } from "../types/container_log.ts";
 import { runCommand } from "../utils/cockpit.ts";
 
@@ -24,28 +24,38 @@ export const containerLogLineCountMaxes = [
 
 export type ContainerLogLineCountMax = number;
 
-export interface ContainerLogResourceOptions {
+export interface ContainerLogResourceLoadOptions {
   id?: string;
   interval: ContainerLogInterval;
   lineCountMax: ContainerLogLineCountMax;
 }
 
-export function useContainerLogResource(
-  { id, interval, lineCountMax }: ContainerLogResourceOptions,
-) {
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<ContainerLog | undefined>();
-  useEffect(() => {
+export interface ContainerLogResource {
+  data: ContainerLog | undefined;
+  loading: boolean;
+  load: (options: ContainerLogResourceLoadOptions) => Promise<void>;
+}
+
+export const useContainerLogResource = create<ContainerLogResource>((set) => ({
+  data: undefined,
+  loading: false,
+  load: async ({
+    id,
+    interval,
+    lineCountMax,
+  }) => {
     if (!id) {
-      setData({ items: [] });
-      setLoading(false);
+      set({
+        data: { items: [] },
+        loading: false,
+      });
       return;
     }
-    setLoading(true);
+    set({ loading: true });
     const since = new Date(
       Date.now() - containerLogIntervalValues[interval],
     ).toISOString();
-    runCommand([
+    await runCommand([
       "docker",
       "logs",
       "--timestamps",
@@ -67,12 +77,13 @@ export function useContainerLogResource(
           .reverse()
           .slice(0, lineCountMax)
       )
-      .then((items) => setData({ items }))
+      .then((items) => set({ data: { items } }))
       .catch((e) => {
         console.error(e);
-        setData({ items: [] });
-      })
-      .finally(() => setLoading(false));
-  }, [id, interval, lineCountMax]);
-  return { data, loading };
-}
+        set({
+          data: undefined,
+          loading: false,
+        });
+      });
+  },
+}));

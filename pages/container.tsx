@@ -5,43 +5,21 @@ import {
   PageBreadcrumb,
   PageGroup,
   PageSection,
-  Spinner,
   Title,
 } from "@patternfly/react-core";
-import { useState } from "react";
+import { useEffect } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import { ContainerLogCard } from "../components/container_log_card.tsx";
 import { ContainerStatCard } from "../components/container_stat_card.tsx";
 import { ContainerSummaryCard } from "../components/container_summary_card.tsx";
-import { useContainerCollection } from "../hooks/use_container_collection.tsx";
-import {
-  ContainerLogInterval,
-  ContainerLogLineCountMax,
-  useContainerLogResource,
-} from "../hooks/use_container_log_resource.tsx";
-import { useContainerStatResource } from "../hooks/use_container_stat_resource.tsx";
+import { useContainerResource } from "../hooks/use_container_resource.tsx";
 
 export const ContainerPage = () => {
   const { id } = useParams();
-  const [
-    containerLogInterval,
-    setContainerLogInterval,
-  ] = useState<ContainerLogInterval>("10m");
-  const [
-    containerLogLineCountMax,
-    setContainerLogLineCountMax,
-  ] = useState<ContainerLogLineCountMax>(100);
-  const containerCollection = useContainerCollection();
-  const container = containerCollection.data.find((v) => v.id === id);
-  const containerStatResource = useContainerStatResource(container?.id);
-  const containerLogResource = useContainerLogResource({
-    id: container?.id,
-    interval: containerLogInterval,
-    lineCountMax: containerLogLineCountMax,
-  });
-  const loading = containerCollection.loading ||
-    containerStatResource.loading ||
-    containerLogResource.loading;
+  const containerResource = useContainerResource();
+  useEffect(() => {
+    containerResource.load();
+  }, [id]);
   return (
     <Page>
       <PageGroup hasShadowBottom>
@@ -60,65 +38,37 @@ export const ContainerPage = () => {
             </BreadcrumbItem>
           </Breadcrumb>
         </PageBreadcrumb>
-        {container && (
+        {containerResource.data && (
           <PageSection variant="light">
-            <Title headingLevel="h1">{container?.name || "unknown"}</Title>
+            <Title headingLevel="h1">{containerResource.data.name}</Title>
           </PageSection>
         )}
       </PageGroup>
-      {loading
-        ? (
-          <PageSection
+      <PageSection>
+        <div
+          css={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            gap: "1em",
+          }}
+        >
+          <div
             css={{
+              width: "100%",
               display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              alignItems: "start",
+              gap: "1em",
             }}
           >
-            <Spinner />
-          </PageSection>
-        )
-        : container && containerStatResource.data && containerLogResource.data
-        ? (
-          <PageSection>
-            <div
-              css={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                gap: "1em",
-              }}
-            >
-              <div
-                css={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "start",
-                  gap: "1em",
-                }}
-              >
-                <ContainerSummaryCard container={container} />
-                <ContainerStatCard
-                  containerStat={containerStatResource.data}
-                />
-              </div>
-              <div>
-                <ContainerLogCard
-                  containerLog={containerLogResource.data}
-                  containerLogInterval={containerLogInterval}
-                  containerLogLineCountMax={containerLogLineCountMax}
-                  onContainerLogIntervalChange={setContainerLogInterval}
-                  onContainerLogLineCountMaxChange={setContainerLogLineCountMax}
-                />
-              </div>
-            </div>
-          </PageSection>
-        )
-        : (
-          <PageSection css={{ display: "flex", justifyContent: "center" }}>
-            TODO
-          </PageSection>
-        )}
+            <ContainerSummaryCard />
+            <ContainerStatCard />
+          </div>
+          <div>
+            <ContainerLogCard />
+          </div>
+        </div>
+      </PageSection>
     </Page>
   );
 };

@@ -1,12 +1,19 @@
-import { useEffect, useState } from "react";
+import { create } from "zustand";
 import { Project } from "../types/project.ts";
 import { runCommand } from "../utils/cockpit.ts";
 
-export function useProjectCollection() {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<Project[]>([]);
-  useEffect(() => {
-    runCommand(["docker", "compose", "ls", "--format", "json"])
+export interface ProjectCollection {
+  data: Project[] | undefined;
+  loading: boolean;
+  load: () => Promise<void>;
+}
+
+export const useProjectCollection = create<ProjectCollection>((set) => ({
+  data: [],
+  loading: false,
+  load: async () => {
+    set({ loading: true });
+    await runCommand(["docker", "compose", "ls", "--format", "json"])
       .then((output) => {
         const raw = JSON.parse(output) as Record<string, string>[];
         return raw.map((v) => ({
@@ -15,12 +22,13 @@ export function useProjectCollection() {
           configs: [v.ConfigFiles],
         }));
       })
-      .then(setData)
+      .then((data) => set({ data }))
       .catch((e) => {
         console.error(e);
-        setData([]);
-      })
-      .finally(() => setLoading(false));
-  }, []);
-  return { data, loading };
-}
+        set({
+          data: undefined,
+          loading: false,
+        });
+      });
+  },
+}));

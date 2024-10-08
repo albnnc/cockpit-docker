@@ -1,14 +1,20 @@
 import { Card, CardBody, CardTitle, Text, Title } from "@patternfly/react-core";
 import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
-import { ContainerStat } from "../types/container_stat.ts";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useContainerStatResource } from "../hooks/use_container_stat_resource.tsx";
 
-export interface ContainerStatCardOptions {
-  containerStat: ContainerStat;
-}
-
-export const ContainerStatCard = (
-  { containerStat: { cpu, ram, net } }: ContainerStatCardOptions,
-) => {
+export const ContainerStatCard = () => {
+  const { id } = useParams();
+  const containerStatResource = useContainerStatResource();
+  useEffect(() => {
+    containerStatResource.load(id);
+  }, []);
+  const {
+    cpu = "–",
+    ram = "–",
+    net = "–",
+  } = containerStatResource.data ?? {};
   const rows = [
     ["CPU", cpu],
     ["RAM", ram],

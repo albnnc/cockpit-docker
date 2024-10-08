@@ -1,12 +1,19 @@
-import { useEffect, useState } from "react";
+import { create } from "zustand";
 import { Container } from "../types/container.ts";
 import { runCommand } from "../utils/cockpit.ts";
 
-export function useContainerCollection() {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<Container[]>([]);
-  useEffect(() => {
-    runCommand(["docker", "container", "ls", "-a", "--format", "json"])
+export interface ContainerCollection {
+  data: Container[] | undefined;
+  loading: boolean;
+  load: () => Promise<void>;
+}
+
+export const useContainerCollection = create<ContainerCollection>((set) => ({
+  data: undefined,
+  loading: false,
+  load: async () => {
+    set({ loading: true });
+    await runCommand(["docker", "container", "ls", "-a", "--format", "json"])
       .then((output) =>
         output
           .split("\n")
@@ -21,12 +28,13 @@ export function useContainerCollection() {
             status: v.Status,
           }))
       )
-      .then(setData)
+      .then((data) => set({ data }))
       .catch((e) => {
         console.error(e);
-        setData([]);
-      })
-      .finally(() => setLoading(false));
-  }, []);
-  return { data, loading };
-}
+        set({
+          data: undefined,
+          loading: false,
+        });
+      });
+  },
+}));

@@ -2,10 +2,10 @@ import { Label } from "@patternfly/react-core";
 import { Container } from "../types/container.ts";
 
 export interface ContainerStateProps {
-  container: Container;
+  state: Container["state"];
 }
 
-export const ContainerState = ({ container }: ContainerStateProps) => {
+export const ContainerState = ({ state }: ContainerStateProps) => {
   return (
     <Label
       color={({
@@ -16,10 +16,9 @@ export const ContainerState = ({ container }: ContainerStateProps) => {
         "paused": "grey",
         "exited": "orange",
         "dead": "red",
-      } as const)[container.state] || "grey" as const}
+      } as const)[state] || "grey" as const}
     >
-      {container.state.slice(0, 1).toLocaleUpperCase() +
-        container.state.slice(1)}
+      {state.slice(0, 1).toLocaleUpperCase() + state.slice(1)}
     </Label>
   );
 };

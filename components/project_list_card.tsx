@@ -1,14 +1,13 @@
 import { Card, CardBody, CardTitle, Title } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import { Project } from "../types/project.ts";
+import { useEffect } from "react";
+import { useProjectCollection } from "../hooks/use_project_collection.tsx";
 
-export interface ProjectListCardProps {
-  projects: Project[];
-}
-
-export const ProjectListCard = ({
-  projects,
-}: ProjectListCardProps) => {
+export const ProjectListCard = () => {
+  const projectCollection = useProjectCollection();
+  useEffect(() => {
+    projectCollection.load();
+  }, []);
   return (
     <Card>
       <CardTitle>
@@ -24,7 +23,7 @@ export const ProjectListCard = ({
             </Tr>
           </Thead>
           <Tbody>
-            {projects.map((v) => (
+            {projectCollection.data?.map((v) => (
               <Tr key={v.name}>
                 <Td dataLabel="Name">{v.name}</Td>
                 <Td dataLabel="Status">{v.status}</Td>

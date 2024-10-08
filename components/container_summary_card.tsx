@@ -1,21 +1,23 @@
 import { Card, CardBody, CardTitle, Text, Title } from "@patternfly/react-core";
 import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
-import { Container } from "../types/container.ts";
+import { useContainerResource } from "../hooks/use_container_resource.tsx";
 import { ContainerState } from "./container_state.tsx";
 
-export interface ContainerSummaryCardOptions {
-  container: Container;
-}
-
-export const ContainerSummaryCard = ({
-  container,
-}: ContainerSummaryCardOptions) => {
+export const ContainerSummaryCard = () => {
+  const containerResource = useContainerResource();
+  const {
+    id = "–",
+    name = "–",
+    image = "–",
+    state = "paused",
+    status = "–",
+  } = containerResource.data ?? {};
   const data = [
-    ["ID", container.id],
-    ["Name", container.name],
-    ["Image", container.image],
-    ["State", <ContainerState container={container} />],
-    ["Status", container.status],
+    ["ID", id],
+    ["Name", name],
+    ["Image", image],
+    ["State", <ContainerState state={state} />],
+    ["Status", status],
   ] as const;
   return (
     <Card css={{ flex: "1 1 auto", maxWidth: "500px", minWidth: "300px" }}>
