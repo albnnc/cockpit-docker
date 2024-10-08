@@ -20,7 +20,7 @@ jobs:
         with:
           deno-version: "1.46.3"
       - name: Version
-        run: echo "::set-output name=version::$(./make.ts version)"
+        run: echo "version=$(./make.ts version)" >> $GITHUB_OUTPUT
         id: version
       - name: Release
         uses: actions/create-release@v1
@@ -32,7 +32,7 @@ jobs:
           tag_name: ${{ github.ref }}
           body: ""
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build
         run: ./make.ts build
       - name: Pack
@@ -40,7 +40,7 @@ jobs:
       - name: Upload
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./.target/cockpit-docker-${{ steps.version.outputs.version }}.tar.gz
