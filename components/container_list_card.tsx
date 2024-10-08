@@ -12,12 +12,13 @@ import {
 } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useContainerCollection } from "../hooks/use_container_collection.tsx";
 import { ContainerState } from "./container_state.tsx";
 import { LoadingCardBody } from "./loading_card_body.tsx";
 
 export const ContainerListCard = () => {
+  const navigate = useNavigate();
   const containerCollection = useContainerCollection();
   useEffect(() => {
     containerCollection.load();
@@ -46,11 +47,12 @@ export const ContainerListCard = () => {
                     {containerCollection.data?.map((v) => (
                       <Tr key={v.name}>
                         <Td dataLabel="ID">
-                          <NavLink to={`/containers/${v.id}`}>
-                            <Text component={TextVariants.a}>
-                              {v.id}
-                            </Text>
-                          </NavLink>
+                          <Text
+                            component={TextVariants.a}
+                            onClick={() => navigate(`/containers/${v.id}`)}
+                          >
+                            {v.id}
+                          </Text>
                         </Td>
                         <Td dataLabel="Name">{v.name}</Td>
                         <Td dataLabel="Name">{v.image}</Td>

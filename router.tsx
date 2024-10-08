@@ -1,8 +1,8 @@
 import { createHashRouter } from "react-router-dom";
 import { ContainerPage } from "./pages/container.tsx";
-import { HomePage } from "./pages/home.tsx";
+import { DockerPage } from "./pages/docker.tsx";
 
 export const router = createHashRouter([
-  { path: "/", element: <HomePage /> },
+  { path: "/", element: <DockerPage /> },
   { path: "/containers/:id", element: <ContainerPage /> },
 ]);

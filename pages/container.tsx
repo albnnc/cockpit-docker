@@ -5,10 +5,12 @@ import {
   PageBreadcrumb,
   PageGroup,
   PageSection,
+  Text,
+  TextVariants,
   Title,
 } from "@patternfly/react-core";
 import { useEffect } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ContainerLogCard } from "../components/container_log_card.tsx";
 import { ContainerStatCard } from "../components/container_stat_card.tsx";
 import { ContainerSummaryCard } from "../components/container_summary_card.tsx";
@@ -16,6 +18,7 @@ import { useContainerResource } from "../hooks/use_container_resource.tsx";
 
 export const ContainerPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const containerResource = useContainerResource();
   useEffect(() => {
     containerResource.load(id);
@@ -25,11 +28,11 @@ export const ContainerPage = () => {
       <PageGroup hasShadowBottom>
         <PageBreadcrumb>
           <Breadcrumb>
-            <NavLink to="/">
-              <BreadcrumbItem>
-                Home
-              </BreadcrumbItem>
-            </NavLink>
+            <BreadcrumbItem>
+              <Text component={TextVariants.a} onClick={() => navigate("/")}>
+                Docker
+              </Text>
+            </BreadcrumbItem>
             <BreadcrumbItem>
               Containers
             </BreadcrumbItem>

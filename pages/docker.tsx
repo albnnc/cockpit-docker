@@ -2,7 +2,7 @@ import { Page, PageSection } from "@patternfly/react-core";
 import { ContainerListCard } from "../components/container_list_card.tsx";
 import { ProjectListCard } from "../components/project_list_card.tsx";
 
-export const HomePage = () => {
+export const DockerPage = () => {
   return (
     <Page>
       <PageSection
