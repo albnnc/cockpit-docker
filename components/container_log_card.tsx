@@ -119,7 +119,10 @@ export const ContainerLogCard = () => {
                     {items.map(({ date, value }) => (
                       <Tr key={date}>
                         <Td>
-                          <Timestamp value={date} />
+                          <Timestamp
+                            value={date}
+                            css={{ whiteSpace: "nowrap" }}
+                          />
                         </Td>
                         <Td>{value}</Td>
                       </Tr>
