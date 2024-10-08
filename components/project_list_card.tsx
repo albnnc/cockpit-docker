@@ -26,7 +26,7 @@ export const ProjectListCard = () => {
       {projectCollection.loading
         ? <LoadingCardBody />
         : (
-          <CardBody css={{ padding: "0", color: "red" }}>
+          <CardBody css={{ padding: "0" }}>
             {projectCollection.data?.length
               ? (
                 <Table borders variant="compact">

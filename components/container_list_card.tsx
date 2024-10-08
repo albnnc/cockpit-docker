@@ -31,7 +31,7 @@ export const ContainerListCard = () => {
       {containerCollection.loading
         ? <LoadingCardBody />
         : (
-          <CardBody css={{ padding: "0", color: "red" }}>
+          <CardBody css={{ padding: "0" }}>
             {containerCollection.data?.length
               ? (
                 <Table borders variant="compact">
