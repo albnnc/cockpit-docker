@@ -8,20 +8,37 @@ import {
   Spinner,
   Title,
 } from "@patternfly/react-core";
+import { useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import { ContainerLogCard } from "../components/container_log_card.tsx";
 import { ContainerStatCard } from "../components/container_stat_card.tsx";
 import { ContainerSummaryCard } from "../components/container_summary_card.tsx";
 import { useContainerCollection } from "../hooks/use_container_collection.tsx";
-import { useContainerLogResource } from "../hooks/use_container_log_resource.tsx";
+import {
+  ContainerLogInterval,
+  ContainerLogLineCountMax,
+  useContainerLogResource,
+} from "../hooks/use_container_log_resource.tsx";
 import { useContainerStatResource } from "../hooks/use_container_stat_resource.tsx";
 
 export const ContainerPage = () => {
   const { id } = useParams();
+  const [
+    containerLogInterval,
+    setContainerLogInterval,
+  ] = useState<ContainerLogInterval>("10m");
+  const [
+    containerLogLineCountMax,
+    setContainerLogLineCountMax,
+  ] = useState<ContainerLogLineCountMax>(100);
   const containerCollection = useContainerCollection();
   const container = containerCollection.data.find((v) => v.id === id);
   const containerStatResource = useContainerStatResource(container?.id);
-  const containerLogResource = useContainerLogResource(container?.id);
+  const containerLogResource = useContainerLogResource({
+    id: container?.id,
+    interval: containerLogInterval,
+    lineCountMax: containerLogLineCountMax,
+  });
   const loading = containerCollection.loading ||
     containerStatResource.loading ||
     containerLogResource.loading;
@@ -88,6 +105,10 @@ export const ContainerPage = () => {
               <div>
                 <ContainerLogCard
                   containerLog={containerLogResource.data}
+                  containerLogInterval={containerLogInterval}
+                  containerLogLineCountMax={containerLogLineCountMax}
+                  onContainerLogIntervalChange={setContainerLogInterval}
+                  onContainerLogLineCountMaxChange={setContainerLogLineCountMax}
                 />
               </div>
             </div>
