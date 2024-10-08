@@ -2,6 +2,10 @@ import {
   Card,
   CardBody,
   CardHeader,
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateHeader,
+  EmptyStateVariant,
   FormSelect,
   FormSelectOption,
   Timestamp,
@@ -102,24 +106,35 @@ export const ContainerLogCard = ({
         <Title headingLevel="h2">Log</Title>
       </CardHeader>
       <CardBody css={{ padding: 0 }}>
-        <Table borders variant="compact">
-          <Thead>
-            <Tr>
-              <Th>Date</Th>
-              <Th>Message</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {items.toReversed().map(({ date, value }) => (
-              <Tr key={date}>
-                <Td>
-                  <Timestamp value={date} />
-                </Td>
-                <Td>{value}</Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
+        {items.length
+          ? (
+            <Table borders variant="compact">
+              <Thead>
+                <Tr>
+                  <Th>Date</Th>
+                  <Th>Message</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {items.map(({ date, value }) => (
+                  <Tr key={date}>
+                    <Td>
+                      <Timestamp value={date} />
+                    </Td>
+                    <Td>{value}</Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          )
+          : (
+            <EmptyState variant={EmptyStateVariant.xs}>
+              <EmptyStateHeader titleText="No data" headingLevel="h4" />
+              <EmptyStateBody>
+                No log lines found.
+              </EmptyStateBody>
+            </EmptyState>
+          )}
       </CardBody>
     </Card>
   );
