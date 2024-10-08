@@ -1,3 +1,4 @@
+/// <reference path="./global.d.ts" />
 import * as objectGroupByPolyfill from "core-js/es/object/group-by.js";
 import { createRoot } from "react-dom/client";
 import { App } from "./app.tsx";

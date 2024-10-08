@@ -2,6 +2,7 @@ import { Card, CardBody, CardTitle, Text, Title } from "@patternfly/react-core";
 import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
 import { useContainerResource } from "../hooks/use_container_resource.tsx";
 import { ContainerState } from "./container_state.tsx";
+import { LoadingCardBody } from "./loading_card_body.tsx";
 
 export const ContainerSummaryCard = () => {
   const containerResource = useContainerResource();
@@ -24,22 +25,26 @@ export const ContainerSummaryCard = () => {
       <CardTitle>
         <Title headingLevel="h2">Summary</Title>
       </CardTitle>
-      <CardBody css={{ padding: 0 }}>
-        <Table borders variant="compact">
-          <Tbody>
-            {data.map(([k, v]) => (
-              <Tr key={k}>
-                <Td>
-                  <Text css={{ fontWeight: "bold" }}>
-                    {k}
-                  </Text>
-                </Td>
-                <Td>{v}</Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </CardBody>
+      {containerResource.loading
+        ? <LoadingCardBody />
+        : (
+          <CardBody css={{ padding: 0 }}>
+            <Table borders variant="compact">
+              <Tbody>
+                {data.map(([k, v]) => (
+                  <Tr key={k}>
+                    <Td>
+                      <Text css={{ fontWeight: "bold" }}>
+                        {k}
+                      </Text>
+                    </Td>
+                    <Td>{v}</Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          </CardBody>
+        )}
     </Card>
   );
 };

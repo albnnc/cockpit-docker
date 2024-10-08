@@ -3,6 +3,7 @@ import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useContainerStatResource } from "../hooks/use_container_stat_resource.tsx";
+import { LoadingCardBody } from "./loading_card_body.tsx";
 
 export const ContainerStatCard = () => {
   const { id } = useParams();
@@ -25,22 +26,26 @@ export const ContainerStatCard = () => {
       <CardTitle>
         <Title headingLevel="h2">Stats</Title>
       </CardTitle>
-      <CardBody css={{ padding: 0 }}>
-        <Table borders variant="compact">
-          <Tbody>
-            {rows.map(([k, v]) => (
-              <Tr key={k}>
-                <Td>
-                  <Text css={{ fontWeight: "bold" }}>
-                    {k}
-                  </Text>
-                </Td>
-                <Td>{v}</Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </CardBody>
+      {containerStatResource.loading
+        ? <LoadingCardBody />
+        : (
+          <CardBody css={{ padding: 0 }}>
+            <Table borders variant="compact">
+              <Tbody>
+                {rows.map(([k, v]) => (
+                  <Tr key={k}>
+                    <Td>
+                      <Text css={{ fontWeight: "bold" }}>
+                        {k}
+                      </Text>
+                    </Td>
+                    <Td>{v}</Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          </CardBody>
+        )}
     </Card>
   );
 };

@@ -77,7 +77,12 @@ export const useContainerLogResource = create<ContainerLogResource>((set) => ({
           .reverse()
           .slice(0, lineCountMax)
       )
-      .then((items) => set({ data: { items } }))
+      .then((items) =>
+        set({
+          data: { items },
+          loading: false,
+        })
+      )
       .catch((e) => {
         console.error(e);
         set({

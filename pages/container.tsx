@@ -18,7 +18,7 @@ export const ContainerPage = () => {
   const { id } = useParams();
   const containerResource = useContainerResource();
   useEffect(() => {
-    containerResource.load();
+    containerResource.load(id);
   }, [id]);
   return (
     <Page>

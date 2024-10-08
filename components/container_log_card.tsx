@@ -21,6 +21,7 @@ import {
   containerLogLineCountMaxes,
   useContainerLogResource,
 } from "../hooks/use_container_log_resource.tsx";
+import { LoadingCardBody } from "./loading_card_body.tsx";
 
 export const containerLogIntervalTitles: Record<
   ContainerLogInterval,
@@ -101,37 +102,41 @@ export const ContainerLogCard = () => {
       >
         <Title headingLevel="h2">Log</Title>
       </CardHeader>
-      <CardBody css={{ padding: 0 }}>
-        {items.length
-          ? (
-            <Table borders variant="compact">
-              <Thead>
-                <Tr>
-                  <Th>Date</Th>
-                  <Th>Message</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {items.map(({ date, value }) => (
-                  <Tr key={date}>
-                    <Td>
-                      <Timestamp value={date} />
-                    </Td>
-                    <Td>{value}</Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          )
-          : (
-            <EmptyState variant={EmptyStateVariant.xs}>
-              <EmptyStateHeader titleText="No data" headingLevel="h4" />
-              <EmptyStateBody>
-                No log lines found.
-              </EmptyStateBody>
-            </EmptyState>
-          )}
-      </CardBody>
+      {containerLogResource.loading
+        ? <LoadingCardBody />
+        : (
+          <CardBody css={{ padding: 0 }}>
+            {items.length
+              ? (
+                <Table borders variant="compact">
+                  <Thead>
+                    <Tr>
+                      <Th>Date</Th>
+                      <Th>Message</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {items.map(({ date, value }) => (
+                      <Tr key={date}>
+                        <Td>
+                          <Timestamp value={date} />
+                        </Td>
+                        <Td>{value}</Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              )
+              : (
+                <EmptyState variant={EmptyStateVariant.xs}>
+                  <EmptyStateHeader titleText="No data" headingLevel="h4" />
+                  <EmptyStateBody>
+                    No log lines found
+                  </EmptyStateBody>
+                </EmptyState>
+              )}
+          </CardBody>
+        )}
     </Card>
   );
 };

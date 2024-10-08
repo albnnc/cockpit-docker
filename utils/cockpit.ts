@@ -8,7 +8,6 @@ export async function runCommand(
   command: string[],
   options?: RunCommandOptions,
 ): Promise<string> {
-  console.log("Executing command: ", command, "with options: ", options);
   // deno-lint-ignore no-explicit-any
   return await (globalThis as any)
     .cockpit
@@ -17,7 +16,6 @@ export async function runCommand(
 }
 
 export async function readFile(path: string): Promise<string> {
-  console.log("Reading file: ", path);
   // deno-lint-ignore no-explicit-any
   return await (globalThis as any)
     .cockpit
@@ -26,7 +24,6 @@ export async function readFile(path: string): Promise<string> {
 }
 
 export async function writeFile(path: string, content: string) {
-  console.log("Writing to file: ", path);
   // deno-lint-ignore no-explicit-any
   return await (globalThis as any)
     .cockpit

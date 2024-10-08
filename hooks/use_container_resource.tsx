@@ -36,7 +36,9 @@ export const useContainerResource = create<ContainerResource>(
               status: v.Status,
             }))
         )
-        .then((vs) => vs.find((v) => v.id === id))
+        .then((vs) => {
+          return vs.find((v) => v.id === id);
+        })
         .then((data) =>
           set({
             data,

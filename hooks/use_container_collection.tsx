@@ -28,7 +28,12 @@ export const useContainerCollection = create<ContainerCollection>((set) => ({
             status: v.Status,
           }))
       )
-      .then((data) => set({ data }))
+      .then((data) =>
+        set({
+          data,
+          loading: false,
+        })
+      )
       .catch((e) => {
         console.error(e);
         set({

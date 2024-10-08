@@ -22,7 +22,12 @@ export const useProjectCollection = create<ProjectCollection>((set) => ({
           configs: [v.ConfigFiles],
         }));
       })
-      .then((data) => set({ data }))
+      .then((data) =>
+        set({
+          data,
+          loading: false,
+        })
+      )
       .catch((e) => {
         console.error(e);
         set({

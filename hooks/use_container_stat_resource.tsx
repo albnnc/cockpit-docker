@@ -37,7 +37,12 @@ export const useContainerStatResource = create<ContainerStatResource>(
             net: raw.NetIO,
           };
         })
-        .then((data) => set({ data }))
+        .then((data) =>
+          set({
+            data,
+            loading: false,
+          })
+        )
         .catch((e) => {
           console.error(e);
           set({
