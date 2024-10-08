@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    tags:        
+      - '*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Clone
+        uses: actions/checkout@v4
+      - name: Set up Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: "1.46.3"
+      - name: Version
+        run: echo "::set-output name=version::$(./make.ts version)"
+        id: version
+      - name: Release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: ${{ steps.version.outputs.version }}
+          tag_name: ${{ github.ref }}
+          body: ""
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Build
+        run: ./make.ts build
+      - name: Pack
+        run: ./make.ts pack
+      - name: Upload
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./.target/cockpit-docker-${{ steps.version.outputs.version }}.tar.gz
+          asset_name: cockpit-docker-${{ steps.version.outputs.version }}.tar.gz
+          asset_content_type: application/gzip

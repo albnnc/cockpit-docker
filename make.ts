@@ -11,7 +11,9 @@ import {
   Project,
 } from "@albnnc/nvil";
 import { Command } from "@cliffy/command";
+import $ from "@david/dax";
 import * as path from "@std/path";
+import denoConfig from "./deno.json" with { type: "json" };
 import { DeployPlugin } from "./utils/deploy_plugin.ts";
 import { StaticsPlugin } from "./utils/statics_plugin.ts";
 
@@ -72,23 +74,15 @@ await new Command()
     await project.done();
     Deno.exit(0); // FIXME
   })
+  .command("pack", "Package build artifacts into .tar.gz.")
+  .action(async () => {
+    $.cd(path.fromFileUrl(import.meta.resolve("./.target/")));
+    const artifactName = `cockpit-docker-${denoConfig.version}.tar.gz`;
+    await $`touch ${artifactName}`;
+    await $`tar --exclude=${artifactName} -cf ${artifactName} .`;
+  })
+  .command("version", "Print project version.")
+  .action(() => {
+    console.log(denoConfig.version);
+  })
   .parse(Deno.args);
-
-// class IgnoreEsbuildPlugin implements EsbuildPlugin {
-//   name = "ignore";
-//   #toBeIgnored: string[];
-//   constructor(toBeIgnored: string[]) {
-//     this.#toBeIgnored = toBeIgnored;
-//   }
-//   setup: EsbuildPlugin["setup"] = (build) => {
-//     build.onLoad(
-//       { namespace: "file", filter: /.+/ },
-//       (args) => {
-//         // TODO: Use a generic way of handling excludes.
-//         if (this.#toBeIgnored.some((v) => args.path.includes(v))) {
-//           return { contents: "" };
-//         }
-//       },
-//     );
-//   };
-// }
