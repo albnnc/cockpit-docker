@@ -44,13 +44,13 @@ export const ProjectListCard = () => {
                   <Tbody>
                     {projectCollection.data?.map((v) => (
                       <Tr key={v.name}>
-                        <Td dataLabel={t("properties.name")}>
+                        <Td dataLabel={t("properties.name") as string}>
                           {v.name}
                         </Td>
-                        <Td dataLabel={t("properties.status")}>
+                        <Td dataLabel={t("properties.status") as string}>
                           {v.status}
                         </Td>
-                        <Td dataLabel={t("properties.configs")}>
+                        <Td dataLabel={t("properties.configs") as string}>
                           {v.configs.join(" ")}
                         </Td>
                       </Tr>
