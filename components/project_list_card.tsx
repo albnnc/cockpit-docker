@@ -10,10 +10,12 @@ import {
 } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useProjectCollection } from "../hooks/use_project_collection.tsx";
 import { LoadingCardBody } from "./loading_card_body.tsx";
 
 export const ProjectListCard = () => {
+  const [t] = useTranslation();
   const projectCollection = useProjectCollection();
   useEffect(() => {
     projectCollection.load();
@@ -21,7 +23,9 @@ export const ProjectListCard = () => {
   return (
     <Card>
       <CardTitle>
-        <Title headingLevel="h2">Projects</Title>
+        <Title headingLevel="h2">
+          {t("headings.projects")}
+        </Title>
       </CardTitle>
       {projectCollection.loading
         ? <LoadingCardBody />
@@ -32,17 +36,23 @@ export const ProjectListCard = () => {
                 <Table borders variant="compact">
                   <Thead>
                     <Tr>
-                      <Th>Name</Th>
-                      <Th>Status</Th>
-                      <Th>Configs</Th>
+                      <Th>{t("properties.name")}</Th>
+                      <Th>{t("properties.status")}</Th>
+                      <Th>{t("properties.configs")}</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
                     {projectCollection.data?.map((v) => (
                       <Tr key={v.name}>
-                        <Td dataLabel="Name">{v.name}</Td>
-                        <Td dataLabel="Status">{v.status}</Td>
-                        <Td dataLabel="Configs">{v.configs.join(" ")}</Td>
+                        <Td dataLabel={t("properties.name")}>
+                          {v.name}
+                        </Td>
+                        <Td dataLabel={t("properties.status")}>
+                          {v.status}
+                        </Td>
+                        <Td dataLabel={t("properties.configs")}>
+                          {v.configs.join(" ")}
+                        </Td>
                       </Tr>
                     ))}
                   </Tbody>
@@ -50,9 +60,12 @@ export const ProjectListCard = () => {
               )
               : (
                 <EmptyState variant={EmptyStateVariant.xs}>
-                  <EmptyStateHeader titleText="No data" headingLevel="h4" />
+                  <EmptyStateHeader
+                    titleText={t("headings.noData")}
+                    headingLevel="h4"
+                  />
                   <EmptyStateBody>
-                    No projects found
+                    {t("descriptions.noProjects")}
                   </EmptyStateBody>
                 </EmptyState>
               )}

@@ -1,11 +1,13 @@
 import { Card, CardBody, CardTitle, Text, Title } from "@patternfly/react-core";
 import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { useContainerStatResource } from "../hooks/use_container_stat_resource.tsx";
 import { LoadingCardBody } from "./loading_card_body.tsx";
 
 export const ContainerStatCard = () => {
+  const [t] = useTranslation();
   const { id } = useParams();
   const containerStatResource = useContainerStatResource();
   useEffect(() => {
@@ -17,14 +19,14 @@ export const ContainerStatCard = () => {
     net = "–",
   } = containerStatResource.data ?? {};
   const rows = [
-    ["CPU", cpu],
-    ["RAM", ram],
-    ["Network", net],
+    [t("properties.cpu"), cpu],
+    [t("properties.ram"), ram],
+    [t("properties.network"), net],
   ] as const;
   return (
     <Card css={{ flex: "1 1 auto", maxWidth: "500px", minWidth: "300px" }}>
       <CardTitle>
-        <Title headingLevel="h2">Stats</Title>
+        <Title headingLevel="h2">{t("headings.stats")}</Title>
       </CardTitle>
       {containerStatResource.loading
         ? <LoadingCardBody />

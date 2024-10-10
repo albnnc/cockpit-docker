@@ -1,0 +1,42 @@
+{
+  "descriptions": {
+    "noContainers": "No containers found",
+    "noLogLines": "No log lines found",
+    "noProjects": "No projects found"
+  },
+  "headings": {
+    "containers": "Containers",
+    "docker": "Docker",
+    "log": "Log",
+    "noData": "No Data",
+    "projects": "Projects",
+    "stats": "Stats",
+    "summary": "Summary"
+  },
+  "logIntervalTitles": {
+    "10m": "Last 10 minutes",
+    "1d": "Last day",
+    "1h": "Last hour",
+    "none": "All time"
+  },
+  "logLineCountMaxTitles": {
+    "100": "100 lines max",
+    "500": "500 lines max",
+    "1000": "1000 lines max",
+    "5000": "5000 lines max",
+    "10000": "10000 lines max"
+  },
+  "properties": {
+    "configs": "Configs",
+    "cpu": "CPU",
+    "date": "Date",
+    "id": "ID",
+    "image": "Image",
+    "message": "Message",
+    "name": "Name",
+    "network": "Network",
+    "ram": "RAM",
+    "state": "State",
+    "status": "Status"
+  }
+}

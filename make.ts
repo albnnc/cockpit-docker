@@ -7,6 +7,7 @@ import {
   BuildPlugin,
   CleanPlugin,
   CopyPlugin,
+  EsbuildPluginFactory,
   HtmlTemplatePlugin,
   Project,
 } from "@albnnc/nvil";
@@ -39,15 +40,7 @@ await new Command()
             );
             options.jsxImportSource = "@emotion/react";
             options.plugins = [
-              // new IgnoreEsbuildPlugin([
-              //   "/units/",
-              //   "eve/app.ts",
-              //   "log/logger.ts",
-              //   "z/cmd",
-              //   "ssh_adapter/constants.ts",
-              //   "docker.ts",
-              // ]),
-              // ...(dev ? [] : [EsbuildPluginFactory.noSideEffects()]),
+              ...(dev ? [] : [EsbuildPluginFactory.noSideEffects()]),
               denoResolverPlugin({ configPath }),
               denoLoaderPlugin({
                 configPath,
@@ -61,6 +54,10 @@ await new Command()
         new CopyPlugin({
           entryPoint: `./manifest.json`,
           bundleUrl: "./manifest.json",
+        }),
+        new CopyPlugin({
+          entryPoint: "./locales/**/*.json",
+          glob: true,
         }),
         new StaticsPlugin(),
         ...(sshUrl ? [new DeployPlugin({ sshUrl })] : []),

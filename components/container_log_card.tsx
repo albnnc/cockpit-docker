@@ -13,6 +13,7 @@ import {
 } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import {
   ContainerLogInterval,
@@ -23,28 +24,8 @@ import {
 } from "../hooks/use_container_log_resource.tsx";
 import { LoadingCardBody } from "./loading_card_body.tsx";
 
-export const containerLogIntervalTitles: Record<
-  ContainerLogInterval,
-  string
-> = {
-  "10m": "Last 10 minutes",
-  "1h": "Last hour",
-  "1d": "Last day",
-  "none": "All time",
-};
-
-export const containerLogLineCountMaxTitles: Record<
-  ContainerLogLineCountMax,
-  string
-> = {
-  100: "100 lines max",
-  500: "500 lines max",
-  1_000: "1000 lines max",
-  5_000: "5000 lines max",
-  10_000: "10000 lines max",
-};
-
 export const ContainerLogCard = () => {
+  const [t] = useTranslation();
   const { id } = useParams();
   const [interval, setInterval] = useState<ContainerLogInterval>("10m");
   const [lineCountMax, setLineCountMax] = useState<ContainerLogLineCountMax>(
@@ -69,13 +50,13 @@ export const ContainerLogCard = () => {
                     (v.target as HTMLSelectElement)
                       .value as ContainerLogInterval,
                   )}
-                css={{ width: "170px" }}
+                css={{ width: "230px" }}
               >
                 {containerLogIntervals.map((v) => (
                   <FormSelectOption
                     key={v}
                     value={v}
-                    label={containerLogIntervalTitles[v]}
+                    label={t(`logIntervalTitles.${v}`)}
                   />
                 ))}
               </FormSelect>
@@ -86,13 +67,13 @@ export const ContainerLogCard = () => {
                   const raw = (v.target as HTMLSelectElement).value as string;
                   setLineCountMax(+raw as ContainerLogLineCountMax);
                 }}
-                css={{ width: "170px" }}
+                css={{ width: "230px" }}
               >
                 {containerLogLineCountMaxes.map((v) => (
                   <FormSelectOption
                     key={v}
                     value={v.toString()}
-                    label={containerLogLineCountMaxTitles[v]}
+                    label={t(`logLineCountMaxTitles.${v}`)}
                   />
                 ))}
               </FormSelect>
@@ -100,7 +81,7 @@ export const ContainerLogCard = () => {
           ),
         }}
       >
-        <Title headingLevel="h2">Log</Title>
+        <Title headingLevel="h2">{t("headings.log")}</Title>
       </CardHeader>
       {containerLogResource.loading
         ? <LoadingCardBody />
@@ -111,8 +92,8 @@ export const ContainerLogCard = () => {
                 <Table borders variant="compact">
                   <Thead>
                     <Tr>
-                      <Th>Date</Th>
-                      <Th>Message</Th>
+                      <Th>{t("properties.date")}</Th>
+                      <Th>{t("properties.message")}</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -132,9 +113,12 @@ export const ContainerLogCard = () => {
               )
               : (
                 <EmptyState variant={EmptyStateVariant.xs}>
-                  <EmptyStateHeader titleText="No data" headingLevel="h4" />
+                  <EmptyStateHeader
+                    titleText={t("headings.noData")}
+                    headingLevel="h4"
+                  />
                   <EmptyStateBody>
-                    No log lines found
+                    {t("descriptions.noLogLines")}
                   </EmptyStateBody>
                 </EmptyState>
               )}

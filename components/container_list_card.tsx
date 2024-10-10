@@ -12,12 +12,14 @@ import {
 } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useContainerCollection } from "../hooks/use_container_collection.tsx";
 import { ContainerState } from "./container_state.tsx";
 import { LoadingCardBody } from "./loading_card_body.tsx";
 
 export const ContainerListCard = () => {
+  const [t] = useTranslation();
   const navigate = useNavigate();
   const containerCollection = useContainerCollection();
   useEffect(() => {
@@ -26,7 +28,7 @@ export const ContainerListCard = () => {
   return (
     <Card>
       <CardTitle>
-        <Title headingLevel="h2">Containers</Title>
+        <Title headingLevel="h2">{t("headings.containers")}</Title>
       </CardTitle>
       {containerCollection.loading
         ? <LoadingCardBody />
@@ -37,10 +39,10 @@ export const ContainerListCard = () => {
                 <Table borders variant="compact">
                   <Thead>
                     <Tr>
-                      <Th>ID</Th>
-                      <Th>Name</Th>
-                      <Th>Image</Th>
-                      <Th>State</Th>
+                      <Th>{t("properties.id")}</Th>
+                      <Th>{t("properties.name")}</Th>
+                      <Th>{t("properties.image")}</Th>
+                      <Th>{t("properties.state")}</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -66,9 +68,12 @@ export const ContainerListCard = () => {
               )
               : (
                 <EmptyState variant={EmptyStateVariant.xs}>
-                  <EmptyStateHeader titleText="No data" headingLevel="h4" />
+                  <EmptyStateHeader
+                    titleText={t("headings.noData")}
+                    headingLevel="h4"
+                  />
                   <EmptyStateBody>
-                    No containers found
+                    {t("descriptions.noContainers")}
                   </EmptyStateBody>
                 </EmptyState>
               )}
