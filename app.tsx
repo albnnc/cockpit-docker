@@ -7,7 +7,10 @@ const [htmlContainer] = document.getElementsByTagName("html");
 export const App = () => {
   const setTheme = useCallback(() => {
     const theme = localStorage.getItem("shell:style");
-    if (theme === "dark") {
+    if (
+      theme === "dark" ||
+      theme === "auto" && matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
       htmlContainer.className = "pf-v5-theme-dark";
     } else {
       htmlContainer.className = "";
